@@ -1,0 +1,60 @@
+How To Install Zabbix Agent on Ubuntu 16.04/14.04 and Debian 9/8
+
+
+Zabbix Agent is required to install on all remote systems needs to monitor through Zabbix server. The Zabbix Agent collects resource utilization and applications data on the client system and provides such information to Zabbix server on their requests.
+
+There are two types of checks can be configured between Zabbix Server and Client.
+
+Passive check – Zabbix Agent only sent data to server on their request.
+Active check – Zabbix Agent sends data periodically to Server.
+After installing zabbix server on your server, this article will help you to install zabbix agent on Ubuntu 16.04 LTS, 14.04 LTS, and Debian 9/8 systems. After completing this below steps go to next article add host in zabbix server.
+
+1. Enable Apt Repository
+Zabbix apt repositories are available on Zabbix official website. Add the repository to install required packages for Zabbix agent using the following command. For the older version of Ubuntu 12.04 LTS can download and install Zabbix agent version 2.2.
+
+For Ubuntu 16.04 LTS:
+
+wget http://repo.zabbix.com/zabbix/3.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_3.4-1+xenial_all.deb
+dpkg -i zabbix-release_3.4-1+xenial_all.deb
+
+For Ubuntu 14.04 LTS:
+
+wget http://repo.zabbix.com/zabbix/3.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_3.4-1+trusty_all.deb
+dpkg -i zabbix-release_3.4-1+trusty_all.deb
+
+For Debian 9:
+
+wget http://repo.zabbix.com/zabbix/3.4/debian/pool/main/z/zabbix-release/zabbix-release_3.4-1+stretch_all.deb
+dpkg -i zabbix-release_3.4-1+stretch_all.deb
+
+For Debian 8:
+
+wget http://repo.zabbix.com/zabbix/3.4/debian/pool/main/z/zabbix-release/zabbix-release_3.4-1+jessie_all.deb
+dpkg -i zabbix-release_3.4-1+jessie_all.deb
+
+For Debian 7:
+
+wget http://repo.zabbix.com/zabbix/3.4/debian/pool/main/z/zabbix-release/zabbix-release_3.4-1+wheezy_all.deb
+dpkg -i zabbix-release_3.4-1+wheezy_all.deb
+2. Install Zabbix Agent
+As you have successfully added Zabbix apt repositories in your system let’s use the following command to install Zabbix agent using the following command
+
+sudo apt-get update
+sudo apt-get install zabbix-agent
+3. Configure Zabbix Agent
+After installing completed of Zabbix aget. Edit zabbix agent configuration file /etc/zabbix/zabbix_agentd.conf and update Zabbix server ip
+
+#Server=[zabbix server ip]
+#Hostname=[Hostname of client system ]
+
+Server=192.168.1.10
+Hostname=Server2
+4. Restart Zabbix Agent
+After adding Zabbix server IP in the configuration file, now restart agent service using below command.
+
+sudo service zabbix-agent start
+To start and stop zabbix-agent service anytime use following commands.
+
+sudo service zabbix-agent start
+sudo service zabbix-agent stop
+Congratulation’s! You have successfully installed Zabbix Agent
