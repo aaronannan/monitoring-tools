@@ -1,1 +1,124 @@
-.
+This article will help you to step by step install Zabbix on Ubuntu and Debian Systems. If you are using CentOS, RHEL or Fedora then Click here to install Zabbix on CentOS, RHEL or Fedora
+
+Step 1 – Install Apache, MySQL and PHP
+You must have LAMP environment on your server to use Zabbix server. If you already have LAMP configured, just skip this step, else install Apache, MySQL, and PHP using the following commands.
+
+sudo apt-get update
+sudo apt-get install apache2
+sudo apt-get install mysql-server
+sudo apt-get install php php-mbstring php-gd php-xml php-bcmath php-ldap php-mysql
+Update timezone in php configuration file /etc/php/PHP_VERSION/apache2/php.ini. Like below:
+
+[Date]
+; http://php.net/date.timezone
+date.timezone = 'Asia/Kolkata'
+Step 2 – Enable Required Apt Repository
+Before installing Zabbix first configure Zabbix package repository in your system using following commands. Use commands as per your operating system.
+
+For Ubuntu 16.04 LTS:
+
+wget http://repo.zabbix.com/zabbix/3.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_3.4-1+xenial_all.deb
+dpkg -i zabbix-release_3.4-1+xenial_all.deb
+
+For Ubuntu 14.04 LTS:
+
+wget http://repo.zabbix.com/zabbix/3.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_3.4-1+trusty_all.deb
+dpkg -i zabbix-release_3.4-1+trusty_all.deb
+
+For Debian 9:
+
+wget http://repo.zabbix.com/zabbix/3.4/debian/pool/main/z/zabbix-release/zabbix-release_3.4-1+stretch_all.deb
+dpkg -i zabbix-release_3.4-1+stretch_all.deb
+
+For Debian 8:
+
+wget http://repo.zabbix.com/zabbix/3.4/debian/pool/main/z/zabbix-release/zabbix-release_3.4-1+jessie_all.deb
+dpkg -i zabbix-release_3.4-1+jessie_all.deb
+
+For Debian 7:
+
+wget http://repo.zabbix.com/zabbix/3.4/debian/pool/main/z/zabbix-release/zabbix-release_3.4-1+wheezy_all.deb
+dpkg -i zabbix-release_3.4-1+wheezy_all.deb
+Step 3 – Install Zabbix Server
+After adding Zabbix apt repository in your system use following command to install Zabbix server. Here zabbix-server-mysql package includes Zabbix server with MySQL support. The zabbix-frontend-php package provides and web interface is written in PHP for the Zabbix server management
+
+sudo apt-get update
+sudo apt-get install zabbix-server-mysql zabbix-frontend-php
+Step 4 – Create Database Schema
+Now create a database schema for your Zabbix server. Login to your MySQL server using administrative privileges and use the following queries to create MySQL database and user for the Zabbix server.
+
+mysql -u root -p
+
+mysql> CREATE DATABASE zabbixdb;
+mysql> GRANT ALL on zabbixdb.* to zabbix@localhost IDENTIFIED BY 'password';
+mysql> FLUSH PRIVILEGES;
+Also load the Zabbix database schema to the database created above.
+
+cd /usr/share/doc/zabbix-server-mysql
+zcat create.sql.gz | mysql -u root -p zabbixdb
+Step 5 – Edit Zabbix Configuration File
+Edit Zabbix server configuration file /etc/zabbix/zabbix_server.conf in your favorite text editor and update the following database configurations. This will be used by Zabbix server to connect to the database.
+
+  DBHost=localhost
+  DBName=zabbixdb
+  DBUser=zabbix
+  DBPassword=password
+Step 6 – Restart Apache and Zabbix
+Zabbix creates its own apache configuration file /etc/zabbix/apache.conf and make a link to Apache configuration directory. Let’s use the following command to restart Apache service.
+
+sudo service apache2 restart
+Zabbix server configuration file are located at /etc/zabbix/zabbix_server.conf. Restart Zabbix server.
+
+sudo service zabbix-server restart
+After starting the Zabbix service, let’s go to Zabbix web installer and finish the installation.
+
+Step 7 – Complete Zabbix Web Installer Wizard
+Zabbix web installer can be accessed on /zabbix subdirectory URL on your servers IP or domain. For example, zabbix.tusimple.io is pointed to my Zabbix server. Now access the Zabbix using the following URL. You must change FQDN as per your setup.
+
+https://zabbix.tusimple.io/zabbix/
+and follow the steps as per given screenshots below.
+
+Zabbix Setup Welcome Screen
+This is the welcome screen of Zabbix web installer. Go forward by click on next button.
+
+
+
+Check for pre-requisities
+Check if your system has all required packages, if everything is ok click next.
+
+
+
+Configure DB Connection
+Enter database details created in Step #4 and click next to continue.
+
+
+
+Zabbix Server Details
+This is the host and port of running Zabbix server. As your Zabbix server is running on the same host, so keep the values unchanged. You can give a name for your instance.
+
+
+
+Pre-Installation Summary
+In this step will show the summary you have entered previous steps, so simply click next.
+
+
+
+Install Zabbix
+If everything goes correctly, You will see a successful installation message on this page. This will also show you a message for the created configuration file.
+
+
+
+Zabbix Login Screen
+Login to Zabbix using default credentials.
+
+ Username: Admin
+ Password: zabbix
+
+
+After successful login, You will get Zabbix dashboard like below.
+
+
+
+Congratulation! Your Zabbix setup has been completed.
+
+
